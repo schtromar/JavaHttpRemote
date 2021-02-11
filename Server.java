@@ -79,7 +79,13 @@ class MyHttpHandler implements HttpHandler{
 //					htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><form action=/control><input type=hidden name=command value=prev><input type=submit command=prev value=PREV></form></td><td><form action=/control><input type=hidden name=command value=next><input type=submit command=prev value=PREV></form></td></tr></table></body></html>";
 					break;
 				default:
-					htmlResponse = htmlResponse + "Unknown command.";
+					try{
+						int key = Integer.valueOf(requestParamValue);
+						robot.keyPress(key);
+						robot.keyRelease(key);
+					}catch(NumberFormatException nfe){
+						htmlResponse = htmlResponse + "Unknown command.";
+					}
 					break;
 			}
 
