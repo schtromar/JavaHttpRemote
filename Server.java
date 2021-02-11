@@ -21,9 +21,8 @@ class Server{
 	}
 }
 
-
 class MyHttpHandler implements HttpHandler{
-	Robot robot;// = new Robot();
+	Robot robot;
 
 	public MyHttpHandler(){
 		try{
@@ -41,28 +40,18 @@ class MyHttpHandler implements HttpHandler{
 			requestParamValue = handleGetRequest(httpExchange);
 		}else if("POST".equals(httpExchange)) {
 			System.out.println(httpExchange);
-			//requestParamValue = handlePostRequest(httpExchange);
 		}
 			handleResponse(httpExchange,requestParamValue);
-		}
+	}
 
 	private String handleGetRequest(HttpExchange httpExchange) {
-		return httpExchange.
-		getRequestURI()
-		.toString()
-		.split("\\?")[1]
-		.split("=")[1];
-
-//		return "SHOW_CONTROLS";
+		return httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[1];
 	}
 
 	private void handleResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException{
 		System.out.println("got request: " + requestParamValue);
 		String htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><form action=/control><input type=hidden name=command value=prev><input type=submit command=prev value=PREV></form></td><td><form action=/control><input type=hidden name=command value=next><input type=submit command=prev value=NEXT></form></td></tr></table><br>";
-;
 		try{
-//			htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><form action=/control><input type=hidden name=command value=prev><input type=submit command=prev value=PREV></form></td><td><form action=/control><input type=hidden name=command value=next><input type=submit command=prev value=PREV></form></td></tr></table></body></html>";
-//			htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><form action=/control><input type=hidden name=command value=prev><input type=submit command=prev value=PREV></form></td><td><form action=/control><input type=hidden name=command value=next><input type=submit command=prev value=PREV></form></td></tr></table>";
 			switch(requestParamValue){
 				case "next":
 					robot.keyPress(39);
@@ -75,8 +64,7 @@ class MyHttpHandler implements HttpHandler{
 					htmlResponse = htmlResponse + "OK";
 					break;
 				case "SHOW_CONTROLS":
-//					htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><button onclick=control?command=prev>BACK</button></td><td><button>NEXT</button></td></tr></table></body></html>";
-//					htmlResponse = "<html><head></head><body><h1>POWERPOINT REMOTE CONTROL</h1><table><tr><td><form action=/control><input type=hidden name=command value=prev><input type=submit command=prev value=PREV></form></td><td><form action=/control><input type=hidden name=command value=next><input type=submit command=prev value=PREV></form></td></tr></table></body></html>";
+					//nothing, really (it was late)
 					break;
 				default:
 					try{
@@ -96,26 +84,10 @@ class MyHttpHandler implements HttpHandler{
 
 		htmlResponse = htmlResponse + "</body></html>";
 
-
 		OutputStream outputStream = httpExchange.getResponseBody();
 		StringBuilder htmlBuilder = new StringBuilder();
 
-/*
-		htmlBuilder.append("<html>").
-		append("<body>").
-		append("<h1>").
-		append("Hello ")
-		.append(requestParamValue)
-		.append("</h1>")
-		.append("</body>")
-		.append("</html>");
-*/
-
-		// encode HTML content
-//		String htmlResponse = StringEscapeUtils.escapeHtml4(htmlBuilder.toString());
-
-
-		// this line is a must
+		// this line is apparently a must
 		httpExchange.sendResponseHeaders(200, htmlResponse.length());
 		outputStream.write(htmlResponse.getBytes());
 		outputStream.flush();
